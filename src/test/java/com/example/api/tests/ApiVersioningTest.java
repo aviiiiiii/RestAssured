@@ -28,7 +28,7 @@
         @Parameters("version")
         @BeforeTest
         @Step("Initialize target API versions")
-        public void initVersion(String version) {
+        public void initVersion(@Optional("v1") String version) {
             // Split by comma to allow multiple versions like "v1,v2"
             targetVersions = Arrays.stream(version.split(","))
                     .map(String::trim)

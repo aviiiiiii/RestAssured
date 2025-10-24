@@ -1,0 +1,41 @@
+# ========================
+# IDEA / IDE files
+# ========================
+.idea/vcs.xml
+*.iml
+*.iws
+*.ipr
+
+# ========================
+# Node / npm
+# ========================
+node_modules/
+package-lock.json
+
+# ========================
+# Allure reports
+# ========================
+.allure/
+allure-report/
+allure-results/
+
+# ========================
+# Maven / Java build
+# ========================
+target/
+target/maven-status/
+target/site/
+target/surefire-reports/
+*.class
+*.jar
+*.war
+*.ear
+
+# ========================
+# Logs, temp, OS files
+# ========================
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
