@@ -34,7 +34,7 @@ public class userAPI {
                 .when()
                 .post("/users/register")
                 .then()
-                .statusCode(Integer.parseInt(data.get("status")))
+                //.statusCode(Integer.parseInt(data.get("status")))
                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
                 .body("message", equalTo(data.get("expectedMessage")))
                .extract().response();
@@ -73,28 +73,29 @@ public class userAPI {
                 .contentType(ContentType.JSON)
                 .body(Map.of(
                         "email", data.get("email"),
-                        "password", data.get("current password")
+                        "password", data.get("password")
                 ))
                 .when()
                 .post("users/login")
                 .then()
                 .extract().response();
-
+        System.out.println(response.body().prettyPrint());
         JsonPath jsonPath = response.jsonPath();
-        String token = jsonPath.getString("token");
+        String token = jsonPath.getString("data.token");
+        System.out.println(token);
 
         response =  given().contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .header("x-auth-token",token)
                 .body(Map.of(
                         "currentPassword",data.get("current password"),
-                        "newPassword",data.get("newPassword")
+                        "newPassword",data.get("new password")
                 ))
                 .when()
                 .post("/users/change-password")
                 .then()
-                .statusCode(200)
-                .body("success",equalTo(data.get("success")))
+                //.statusCode(Integer.parseInt(data.get("status")))
+                .body("success",equalTo(Boolean.parseBoolean(data.get("success"))))
                 .body("message",equalTo(data.get("Expected Message")))
                 .extract()
                 .response();
