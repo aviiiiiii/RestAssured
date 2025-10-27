@@ -8,18 +8,9 @@ public class ExcelUtilsUsersAPI {
 
     @DataProvider(name = "registerData")
     public Object[][] getRegisterData() throws Exception {
-        return getDataFromSheet("UserRegister");
-    }
 
-    @DataProvider(name = "loginData")
-    public Object[][] getLoginData() throws Exception {
-        return getDataFromSheet("Login");
-    }
-
-    private Object[][] getDataFromSheet(String sheetName) throws Exception {
         String filePath = "src/test/resources/API_Users.xlsx";
-
-        List<Map<String, String>> excelData = ExcelUtils.readExcelData(filePath, sheetName);
+        List<Map<String, String>> excelData = ExcelUtils.readExcelData(filePath, "UserRegister");
 
         Object[][] data = new Object[excelData.size()][1];
 
@@ -29,5 +20,4 @@ public class ExcelUtilsUsersAPI {
 
         return data;
     }
-
 }
