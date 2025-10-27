@@ -23,7 +23,7 @@ public class userAPI {
     @Test(dataProvider = "registerData", dataProviderClass = ExcelUtilsUsersAPI.class)
     public void registerUser(Map<String, String> data) {
 
-       var response= given()
+        given()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
                         "name", data.get("name"),
@@ -37,24 +37,34 @@ public class userAPI {
                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
                 .body("message", equalTo(data.get("expectedMessage")))
                .extract().response();
-//       System.out.println(response.body().prettyPrint());
-    }
-
-    @Test
-    public  void loginUser() throws IOException{
-
-       given().contentType(ContentType.JSON).body(Map.of(
-           "email","aviii134@gmail.com",
-           "password","password123"
-        )).when().post("users/login").then()
-                .statusCode(200)
-                .body("success",equalTo(true))
-                .body("data.token",notNullValue())
-                .body("message",equalTo("Login successful"))
-                .extract()
-                .response();
 
     }
+
+    @Test(dataProvider = "loginData",dataProviderClass = ExcelUtilsUsersAPI.class)
+    public void loginUser(Map<String, String> data) {
+
+        var response = given()
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "email", data.get("email"),
+                        "password", data.get("password")
+                ))
+                .when()
+                .post("users/login")
+                .then()
+                .statusCode(Integer.parseInt(data.get("status")))
+                .body("success", equalTo(Boolean.parseBoolean(data.get("Success"))))
+                .body("message", equalTo(data.get("Expected Message")));
+
+        if (Boolean.parseBoolean(data.get("Success"))) {
+            response.body("data.token", notNullValue());
+            System.out.println("Token validated");
+        }else{
+            System.out.println("Error occurred so token doesn't exist ");
+        }
+
+    }
+
 
 
 
