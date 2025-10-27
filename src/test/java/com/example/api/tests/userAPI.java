@@ -4,6 +4,7 @@ package com.example.api.tests;
 import com.example.api.utils.ExcelUtilsUsersAPI;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -65,32 +66,41 @@ public class userAPI {
 
     }
 
-    @Test
-    public void changePassword(){
+    @Test(dataProvider = "changePasswordData",dataProviderClass = ExcelUtilsUsersAPI.class)
+    public void changePassword(Map<String, String> data){
 
-        String token = "9f9c2ea6e5a74fc3b5f5167be561dab9d28f2bdf32ea48d4892f68b9924ef322";
+        var response = given()
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "email", data.get("email"),
+                        "password", data.get("current password")
+                ))
+                .when()
+                .post("users/login")
+                .then()
+                .extract().response();
 
-        var response =  given().contentType(ContentType.URLENC)
+        JsonPath jsonPath = response.jsonPath();
+        String token = jsonPath.getString("token");
+
+        response =  given().contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .header("x-auth-token",token)
-                .formParam("currentPassword","test@1234")
-                .formParam("newPassword","test@12345")
+                .body(Map.of(
+                        "currentPassword",data.get("current password"),
+                        "newPassword",data.get("newPassword")
+                ))
                 .when()
                 .post("/users/change-password")
                 .then()
-//                .statusCode(200)
-//                .body("success",equalTo(true))
-//                .body("message",equalTo("The password was successfully updated"))
+                .statusCode(200)
+                .body("success",equalTo(data.get("success")))
+                .body("message",equalTo(data.get("Expected Message")))
                 .extract()
                 .response();
 
         System.out.println(response.body().prettyPrint());
 
     }
-
-
-
-
-
 
 }

@@ -18,6 +18,12 @@ public class ExcelUtilsUsersAPI {
         return getDataFromSheet("Login");
     }
 
+    @DataProvider(name = "changePasswordData")
+    public Object[][] getChangePassword() throws Exception {
+        return getDataFromSheet("ChangePassword");
+
+    }
+
     private Object[][] getDataFromSheet(String sheetName) throws Exception {
         String filePath = "src/test/resources/API_Users.xlsx";
 
