@@ -23,8 +23,6 @@ public class userAPI {
     @Test(dataProvider = "registerData", dataProviderClass = ExcelUtilsUsersAPI.class)
     public void registerUser(Map<String, String> data) {
 
-        System.out.println(data.get("status"));
-
        var response= given()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
@@ -36,9 +34,10 @@ public class userAPI {
                 .post("/users/register")
                 .then()
                 .statusCode(Integer.parseInt(data.get("status")))
-               .body("success", equalTo(Boolean.parseBoolean(data.get("expectedSuccess"))))
-                .body("message", equalTo(data.get("expectedMessage")));
-       System.out.println(response);
+               .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
+                .body("message", equalTo(data.get("expectedMessage")))
+               .extract().response();
+//       System.out.println(response.body().prettyPrint());
     }
 
     @Test
