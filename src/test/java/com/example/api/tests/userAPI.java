@@ -65,6 +65,29 @@ public class userAPI {
 
     }
 
+    @Test
+    public void changePassword(){
+
+        String token = "9f9c2ea6e5a74fc3b5f5167be561dab9d28f2bdf32ea48d4892f68b9924ef322";
+
+        var response =  given().contentType(ContentType.URLENC)
+                .accept(ContentType.JSON)
+                .header("x-auth-token",token)
+                .formParam("currentPassword","test@1234")
+                .formParam("newPassword","test@12345")
+                .when()
+                .post("/users/change-password")
+                .then()
+//                .statusCode(200)
+//                .body("success",equalTo(true))
+//                .body("message",equalTo("The password was successfully updated"))
+                .extract()
+                .response();
+
+        System.out.println(response.body().prettyPrint());
+
+    }
+
 
 
 
