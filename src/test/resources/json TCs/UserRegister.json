@@ -1,17 +1,17 @@
 [
   {
     "Testcases": "Success",
-    "name": "Test",
-    "email": "test004@admin.com",
-    "password": "test@1234",
+    "name": "admin",
+    "email": "admin003@avi.com",
+    "password": "admin@1234",
     "success": "TRUE",
     "status": "201",
     "Expected Message": "User account created successfully"
   },
   {
     "Testcases": "Duplicate Email",
-    "name": "Test1",
-    "email": "test004@admin.com",
+    "name": "admin",
+    "email": "admin003@avi.com",
     "password": "test@1234",
     "success": "FALSE",
     "status": "409",
@@ -19,7 +19,7 @@
   },
   {
     "Testcases": "Invalid Email",
-    "name": "Test2",
+    "name": "admin",
     "email": "test1.com",
     "password": "test@1234",
     "success": "FALSE",
@@ -28,7 +28,7 @@
   },
   {
     "Testcases": "Invalid Password",
-    "name": "Test3",
+    "name": "admin",
     "email": "intest002@admin.com",
     "password": "test",
     "success": "FALSE",

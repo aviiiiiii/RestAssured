@@ -25,7 +25,7 @@ public class userAPI_json {
     @Test(dataProvider = "registerData", dataProviderClass = JsonUtils.class)
     public void registerUser(Map<String, String> data) {
 
-        given()
+        var response = given()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
                         "name", data.get("name"),
@@ -35,9 +35,9 @@ public class userAPI_json {
                 .when()
                 .post("/users/register")
                 .then()
-                //.statusCode(Integer.parseInt(data.get("status")))
+                .statusCode(Integer.parseInt(data.get("status")))
                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
-                .body("message", equalTo(data.get("expectedMessage")))
+                .body("message", equalTo(data.get("Expected Message")))
                .extract().response();
 
     }
@@ -55,10 +55,10 @@ public class userAPI_json {
                 .post("users/login")
                 .then()
                 .statusCode(Integer.parseInt(data.get("status")))
-                .body("success", equalTo(Boolean.parseBoolean(data.get("Success"))))
+                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
                 .body("message", equalTo(data.get("Expected Message")));
 
-        if (Boolean.parseBoolean(data.get("Success"))) {
+        if (Boolean.parseBoolean(data.get("success"))) {
             response.body("data.token", notNullValue());
             System.out.println("Token validated");
         }else{
@@ -83,7 +83,6 @@ public class userAPI_json {
         System.out.println(response.body().prettyPrint());
         JsonPath jsonPath = response.jsonPath();
         String token = jsonPath.getString("data.token");
-        System.out.println(token);
 
         response =  given().contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -101,7 +100,6 @@ public class userAPI_json {
                 .extract()
                 .response();
 
-        System.out.println(response.body().prettyPrint());
 
     }
 

@@ -28,7 +28,7 @@
     "email": "test003@admin.com",
     "password": "test@12345678",
     "success": "FALSE",
-    "status": "400",
+    "status": "401",
     "Expected Message": "Incorrect email address or password"
   }
 ]
