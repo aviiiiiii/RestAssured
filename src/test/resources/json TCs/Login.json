@@ -1,0 +1,34 @@
+[
+  {
+    "Testcases": "Success",
+    "email": "test003@admin.com",
+    "password": "test@1234",
+    "success": "TRUE",
+    "status": "200",
+    "Expected Message": "Login successful"
+  },
+  {
+    "Testcases": "Invalid Email",
+    "email": "test0067.com",
+    "password": "test@1234",
+    "success": "FALSE",
+    "status": "400",
+    "Expected Message": "A valid email address is required"
+  },
+  {
+    "Testcases": "Invalid Password",
+    "email": "test003@admin.com",
+    "password": "tEST",
+    "success": "FALSE",
+    "status": "400",
+    "Expected Message": "Password must be between 6 and 30 characters"
+  },
+  {
+    "Testcases": "Incorrect Password",
+    "email": "test003@admin.com",
+    "password": "test@12345678",
+    "success": "FALSE",
+    "status": "400",
+    "Expected Message": "Incorrect email address or password"
+  }
+]

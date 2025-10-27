@@ -2,26 +2,27 @@ package com.example.api.tests;
 
 
 import com.example.api.utils.ExcelUtilsUsersAPI;
+import com.example.api.utils.JsonUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
-public class userAPI {
+public class userAPI_json {
 
     @BeforeClass
     public static void setup() {
         RestAssured.baseURI = "https://practice.expandtesting.com/notes/api";
     }
 
-    @Test(dataProvider = "registerData", dataProviderClass = ExcelUtilsUsersAPI.class)
+    @Test(dataProvider = "registerData", dataProviderClass = JsonUtils.class)
     public void registerUser(Map<String, String> data) {
 
         given()
@@ -41,7 +42,7 @@ public class userAPI {
 
     }
 
-    @Test(dataProvider = "loginData",dataProviderClass = ExcelUtilsUsersAPI.class)
+    @Test(dataProvider = "loginData",dataProviderClass = JsonUtils.class)
     public void loginUser(Map<String, String> data) {
 
         var response = given()
@@ -66,7 +67,7 @@ public class userAPI {
 
     }
 
-    @Test(dataProvider = "changePasswordData",dataProviderClass = ExcelUtilsUsersAPI.class)
+    @Test(dataProvider = "changePasswordData",dataProviderClass = JsonUtils.class)
     public void changePassword(Map<String, String> data){
 
         var response = given()

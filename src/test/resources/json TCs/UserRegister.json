@@ -1,0 +1,38 @@
+[
+  {
+    "Testcases": "Success",
+    "name": "Test",
+    "email": "test004@admin.com",
+    "password": "test@1234",
+    "success": "TRUE",
+    "status": "201",
+    "Expected Message": "User account created successfully"
+  },
+  {
+    "Testcases": "Duplicate Email",
+    "name": "Test1",
+    "email": "test004@admin.com",
+    "password": "test@1234",
+    "success": "FALSE",
+    "status": "409",
+    "Expected Message": "An account already exists with the same email address"
+  },
+  {
+    "Testcases": "Invalid Email",
+    "name": "Test2",
+    "email": "test1.com",
+    "password": "test@1234",
+    "success": "FALSE",
+    "status": "400",
+    "Expected Message": "A valid email address is required"
+  },
+  {
+    "Testcases": "Invalid Password",
+    "name": "Test3",
+    "email": "intest002@admin.com",
+    "password": "test",
+    "success": "FALSE",
+    "status": "400",
+    "Expected Message": "Password must be between 6 and 30 characters"
+  }
+]
