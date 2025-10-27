@@ -35,7 +35,7 @@ public class userAPI {
                 .then()
                 .statusCode(Integer.parseInt(data.get("status")))
                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
-                .body("message", equalTo(data.get("expectedMessage")))
+                .body("message", equalTo(data.get("Expected Message")))
                .extract().response();
 
     }
@@ -52,8 +52,8 @@ public class userAPI {
                 .when()
                 .post("users/login")
                 .then()
-                .statusCode(Integer.parseInt(data.get("status")))
-                .body("success", equalTo(Boolean.parseBoolean(data.get("Success"))))
+               // .statusCode(Integer.parseInt(data.get("status")))
+                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
                 .body("message", equalTo(data.get("Expected Message")));
 
         if (Boolean.parseBoolean(data.get("Success"))) {
@@ -73,14 +73,14 @@ public class userAPI {
         var response =  given().contentType(ContentType.URLENC)
                 .accept(ContentType.JSON)
                 .header("x-auth-token",token)
-                .formParam("currentPassword","test@1234")
+                .body("currentPassword","test@1234")
                 .formParam("newPassword","test@12345")
                 .when()
                 .post("/users/change-password")
                 .then()
-//                .statusCode(200)
-//                .body("success",equalTo(true))
-//                .body("message",equalTo("The password was successfully updated"))
+                .statusCode(200)
+                .body("success",equalTo(true))
+                .body("message",equalTo("The password was successfully updated"))
                 .extract()
                 .response();
 

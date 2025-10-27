@@ -16,7 +16,10 @@ public class ExcelUtilsUsersAPI {
     @DataProvider(name = "loginData")
     public Object[][] getLoginData() throws Exception {
         return getDataFromSheet("Login");
+
+
     }
+
 
     private Object[][] getDataFromSheet(String sheetName) throws Exception {
         String filePath = "src/test/resources/API_Users.xlsx";
