@@ -6,10 +6,16 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.testng.TestNG;
+import org.testng.xml.XmlSuite;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.*;
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 
 public class TestNGXMLGenerator2 {
 
@@ -124,11 +130,12 @@ public class TestNGXMLGenerator2 {
                 writer.write(xmlBuilder.toString());
             }
 
-            System.out.println("✅ TestNG XML generated successfully: " + xmlFilePath);
+            System.out.println("TestNG XML generated successfully: " + xmlFilePath);
+            runGeneratedXML(xmlFilePath);
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("❌ Failed to generate TestNG XML: " + e.getMessage());
+            throw new RuntimeException("Failed to generate TestNG XML: " + e.getMessage());
         }
     }
 
@@ -146,6 +153,22 @@ public class TestNGXMLGenerator2 {
             return "";
         }
     }
+
+    private static void runGeneratedXML(String xmlFilePath) {
+        try {
+            TestNG testng = new TestNG();
+            List<String> suites = new ArrayList<>();
+            suites.add(xmlFilePath);
+            testng.setTestSuites(suites);
+            System.out.println("Running TestNG suite from: " + xmlFilePath);
+            testng.run();
+            System.out.println("TestNG execution completed!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to run generated TestNG XML: " + e.getMessage());
+        }
+    }
+
 
     // Helper class for test case data
     private static class TestCaseData {

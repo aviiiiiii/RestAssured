@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Regression,API]" guice-stage="DEVELOPMENT">
+  <parameter name="env" value="qa"/>
+  <parameter name="version" value="v3"/>
+  <test thread-count="5" name="API(failed)">
+    <classes>
+      <class name="com.example.api.tests.userAPI_json">
+        <methods>
+          <include name="loginUser" invocation-numbers="0 1 2 3"/>
+          <include name="setup"/>
+          <include name="registerUser" invocation-numbers="0 1 2 3"/>
+        </methods>
+      </class> <!-- com.example.api.tests.userAPI_json -->
+    </classes>
+  </test> <!-- API(failed) -->
+</suite> <!-- Failed suite [Regression,API] -->
