@@ -1,4 +1,4 @@
-package com.example.api.tests.APITestingBasedOnMethods;
+package com.example.api.tests.apiScripts;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
