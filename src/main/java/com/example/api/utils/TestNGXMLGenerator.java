@@ -134,7 +134,7 @@ public class TestNGXMLGenerator {
         System.setProperty("allure.results.directory", resultsDir);
         XmlSuite suite = buildSuite(testData);
         writeSuiteToXmlFile(suite, outputPath);
-//        runSuite(suite);
+//      runSuite(suite);
     }
 
     /*
