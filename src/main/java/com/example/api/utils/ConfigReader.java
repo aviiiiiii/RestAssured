@@ -21,4 +21,8 @@ public class ConfigReader {
     public static String getProperty (String key) {
         return properties.getProperty(key);
     }
+
+    public static Properties getAllProperties() {
+        return properties;
+    }
 }
