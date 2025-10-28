@@ -8,7 +8,6 @@ import io.restassured.path.json.JsonPath;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -84,7 +83,7 @@ public class userAPI {
         JsonPath jsonPath = response.jsonPath();
         String token = jsonPath.getString("data.token");
 
-        response =  given().contentType(ContentType.JSON)
+         given().contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .header("x-auth-token",token)
                 .body(Map.of(
