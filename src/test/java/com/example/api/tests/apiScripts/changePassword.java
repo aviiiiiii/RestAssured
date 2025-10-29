@@ -1,8 +1,12 @@
 package com.example.api.tests.apiScripts;
 
+import com.example.api.utils.JsonUtils;
+import com.example.api.utils.TestNGXMLGenerator;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -13,185 +17,87 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class changePassword {
 
+    private static final Logger logger = LoggerFactory.getLogger(changePassword.class);
+
     @BeforeClass
     public void setup() {
         RestAssured.baseURI = "https://practice.expandtesting.com";
         RestAssured.basePath = "/notes/api/users";
     }
 
+    @Test(dataProvider = "changePasswordData", dataProviderClass = JsonUtils.class)
+    private void validateChangePassword(Map<String, String> data) {
 
-    @Test(priority = 1)
-    public void changePasswordSuccess(){
-
-        var response = given()
+        // Login request to fetch token
+        var loginResponse = given()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
-                        "email","santhosh680657@gmail.com" ,
-                        "password", "Password@0987"
+                        "email", data.get("email"),
+                        "password", data.get("password")
                 ))
                 .when()
                 .post("/login")
                 .then()
                 .extract().response();
-        JsonPath jsonPath = response.jsonPath();
+
+        JsonPath jsonPath = loginResponse.jsonPath();
         String token = jsonPath.getString("data.token");
 
-        given().contentType(ContentType.JSON)
+        logger.info("Token Received: + token");
+
+
+        // Change Password request
+        given()
+                .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
-                .header("x-auth-token",token)
+                .header("x-auth-token", token)
                 .body(Map.of(
-                        "currentPassword","Password@0987",
-                        "newPassword","Password@3245"
+                        "currentPassword", data.get("current password"),
+                        "newPassword", data.get("new password")
                 ))
                 .when()
                 .post("/change-password")
                 .then()
-                .statusCode(200)
-                .body("success",equalTo(true))
-                .body("message",equalTo("The password was successfully updated"))
-                .extract()
-                .response();
+                .statusCode(Integer.parseInt(data.get("status")))
+                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
+                .body("message", equalTo(data.get("Expected Message")));
 
-
+                logger.info("Validation completed");
     }
 
-    @Test(priority = 2)
-    public void changePasswordInvalidCurrentPassword(){
 
-        var response = given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "email","santhosh680657@gmail.com" ,
-                        "password", "Password@0987"
-                ))
-                .when()
-                .post("/login")
-                .then()
-                .extract().response();
-        JsonPath jsonPath = response.jsonPath();
-        String token = jsonPath.getString("data.token");
-
-        given().contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("x-auth-token",token)
-                .body(Map.of(
-                        "currentPassword","Pass",
-                        "newPassword","Password@3245"
-                ))
-                .when()
-                .post("/change-password")
-                .then()
-                .statusCode(400)
-                .body("success",equalTo(false))
-                .body("message",equalTo("Current password must be between 6 and 30 characters"))
-                .extract()
-                .response();
-
-
+    @Test(priority = 1, dataProvider = "changePasswordData", dataProviderClass =  JsonUtils.class)
+    public void changePasswordSuccess(Map<String, String> data) {
+        if ("Success".equalsIgnoreCase(data.get("Testcases"))) {
+            validateChangePassword(data);
+        }
     }
 
-    @Test(priority = 3)
-    public void changePasswordIncorrectPassword(){
-
-        var response = given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "email","santhosh680657@gmail.com" ,
-                        "password", "Password@0987"
-                ))
-                .when()
-                .post("/login")
-                .then()
-                .extract().response();
-        JsonPath jsonPath = response.jsonPath();
-        String token = jsonPath.getString("data.token");
-
-        given().contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("x-auth-token",token)
-                .body(Map.of(
-                        "currentPassword","Pass@11100",
-                        "newPassword","Password@3245"
-                ))
-                .when()
-                .post("/change-password")
-                .then()
-                .statusCode(400)
-                .body("success",equalTo(false))
-                .body("message",equalTo("The current password is incorrect"))
-                .extract()
-                .response();
-
-
+    @Test(priority = 2, dataProvider = "changePasswordData", dataProviderClass = JsonUtils.class)
+    public void changePasswordInvalidCurrentPassword(Map<String, String> data) {
+        if ("Invalid Current Password".equalsIgnoreCase(data.get("Testcases"))) {
+            validateChangePassword(data);
+        }
     }
 
-    @Test(priority = 4)
-    public void changePasswordInvalidNewPassword(){
-
-        var response = given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "email","santhosh680657@gmail.com" ,
-                        "password", "Password@0987"
-                ))
-                .when()
-                .post("/login")
-                .then()
-                .extract().response();
-        JsonPath jsonPath = response.jsonPath();
-        String token = jsonPath.getString("data.token");
-
-        given().contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("x-auth-token",token)
-                .body(Map.of(
-                        "currentPassword","Password@0987",
-                        "newPassword","Pass"
-                ))
-                .when()
-                .post("/change-password")
-                .then()
-                .statusCode(400)
-                .body("success",equalTo(false))
-                .body("message",equalTo("New password must be between 6 and 30 characters"))
-                .extract()
-                .response();
-
-
+    @Test(priority = 3, dataProvider = "changePasswordData", dataProviderClass = JsonUtils.class)
+    public void changePasswordIncorrectCurrentPassword(Map<String, String> data) {
+        if ("Incorrect Current Password".equalsIgnoreCase(data.get("Testcases"))) {
+            validateChangePassword(data);
+        }
     }
 
-    @Test(priority = 5)
-    public void currentPasswordSameAsNewPassword(){
+    @Test(priority = 4, dataProvider = "changePasswordData", dataProviderClass = JsonUtils.class)
+    public void changePasswordInvalidNewPassword(Map<String, String> data) {
+        if ("Invalid New Password".equalsIgnoreCase(data.get("Testcases"))) {
+            validateChangePassword(data);
+        }
+    }
 
-        var response = given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "email","santhosh680657@gmail.com" ,
-                        "password", "Password@0987"
-                ))
-                .when()
-                .post("/login")
-                .then()
-                .extract().response();
-        JsonPath jsonPath = response.jsonPath();
-        String token = jsonPath.getString("data.token");
-
-        given().contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("x-auth-token",token)
-                .body(Map.of(
-                        "currentPassword","Password@0987",
-                        "newPassword","Password@0987"
-                ))
-                .when()
-                .post("/change-password")
-                .then()
-                .statusCode(400)
-                .body("success",equalTo(false))
-                .body("message",equalTo("The new password should be different from the current password"))
-                .extract()
-                .response();
-
-
+    @Test(priority = 5, dataProvider = "changePasswordData", dataProviderClass =  JsonUtils.class)
+    public void changePasswordCurrentSameAsNew(Map<String, String> data) {
+        if ("New Password Same As Current Password".equalsIgnoreCase(data.get("Testcases"))) {
+            validateChangePassword(data);
+        }
     }
 }

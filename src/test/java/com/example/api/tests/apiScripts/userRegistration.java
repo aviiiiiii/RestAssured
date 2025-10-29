@@ -1,5 +1,6 @@
 package com.example.api.tests.apiScripts;
 
+import com.example.api.utils.JsonUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.testng.annotations.BeforeClass;
@@ -19,84 +20,52 @@ public class userRegistration {
         RestAssured.basePath = "/notes/api/users";
     }
 
-    @Test(priority = 1)
-    public void registerUserSuccess() {
+    @Test(dataProvider = "registerData", dataProviderClass = JsonUtils.class)
+    private void validateUserRegistration(Map<String, String> data) {
 
         given()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
-                        "name", "Devavikashini",
-                        "email", "santhosh0000001@gmail.com",
-                        "password", "Password@123"
+                        "name", data.get("name"),
+                        "email", data.get("email"),
+                        "password", data.get("password")
                 ))
                 .when()
                 .post("/register")
                 .then()
-                .statusCode(201)
-                .body("success", equalTo(true))
-                .body("message", equalTo("User account created successfully"));
-
-
+                .statusCode(Integer.parseInt(data.get("status")))
+                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
+                .body("message", equalTo(data.get("Expected Message")));
     }
 
-    @Test(priority = 2)
-    public void registerWithInvalidEmail() {
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "name", "Devavikashini",
-                        "email", "santhosh680657.com",
-                        "password", "Password@123"
-                ))
-                .when()
-                .post("/register")
-                .then()
-                .statusCode(400)
-                .body("success", equalTo(false))
-                .body("message", equalTo("A valid email address is required"));
-
-
+    @Test(priority = 1, dataProvider = "registerData", dataProviderClass = JsonUtils.class)
+    public void registerUserSuccess(Map<String, String> data) {
+        if ("Success".equals(data.get("Testcases"))) {
+            validateUserRegistration(data);
+        }
     }
 
-    @Test(priority = 3)
-    public void registerWithDuplicateEmail() {
 
-        given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "name", "Devavikashini",
-                        "email", "santhosh680657@gmail.com",
-                        "password", "Password@123"
-                ))
-                .when()
-                .post("/register")
-                .then()
-                .statusCode(409)
-                .body("success", equalTo(false))
-                .body("message", equalTo("An account already exists with the same email address"));
-
-
+    @Test(priority = 2, dataProvider = "registerData", dataProviderClass = JsonUtils.class)
+    public void registerWithInvalidEmail(Map<String, String> data) {
+        if ("Invalid Email".equals(data.get("Testcases"))) {
+            validateUserRegistration(data);
+        }
     }
 
-    @Test(priority = 4)
-    public void registerWithInvalidPassword() {
 
-        given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "name", "Devavikashini",
-                        "email", "santhosh680657@gmail.com",
-                        "password", "Pass"
-                ))
-                .when()
-                .post("/register")
-                .then()
-                .statusCode(400)
-                .body("success", equalTo(false))
-                .body("message", equalTo("Password must be between 6 and 30 characters"));
+    @Test(priority = 3, dataProvider = "registerData", dataProviderClass = JsonUtils.class)
+    public void registerWithDuplicateEmail(Map<String, String> data) {
+        if ("Duplicate Email".equals(data.get("Testcases"))) {
+            validateUserRegistration(data);
+        }
+    }
 
-
+    @Test(priority = 4, dataProvider = "registerData", dataProviderClass = JsonUtils.class)
+    public void registerWithInvalidPassword(Map<String, String> data) {
+        if ("Invalid Password".equals(data.get("Testcases"))) {
+            validateUserRegistration(data);
+        }
     }
 
 }

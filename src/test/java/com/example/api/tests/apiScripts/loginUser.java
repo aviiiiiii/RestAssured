@@ -1,5 +1,6 @@
 package com.example.api.tests.apiScripts;
 
+import com.example.api.utils.JsonUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.testng.annotations.BeforeClass;
@@ -18,73 +19,56 @@ public class loginUser {
         RestAssured.baseURI = "https://practice.expandtesting.com";
         RestAssured.basePath = "/notes/api/users";
     }
-
-    @Test(priority = 1)
-    public void loginUserSuccess() {
-
-        given()
+    @Test(dataProvider = "loginData", dataProviderClass = JsonUtils.class)
+    private void validateLogin(Map<String, String> data) {
+        var response = given()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
-                        "email", "santhosh680657@gmail.com",
-                        "password", "Password@0987"
+                        "email", data.get("email"),
+                        "password", data.get("password")
                 ))
                 .when()
                 .post("/login")
                 .then()
-                .statusCode(200)
-                .body("success", equalTo(true))
-                .body("message", equalTo("Login successful"))
-                .body("data.token", notNullValue()); // token validation
+                .statusCode(Integer.parseInt(data.get("status")))
+                .body("success", equalTo(Boolean.parseBoolean(data.get("success"))))
+                .body("message", equalTo(data.get("Expected Message")));
+
+        if (Boolean.parseBoolean(data.get("success"))) {
+            response.body("data.token", notNullValue());
+            System.out.println("Token validation successful");
+        } else {
+            System.out.println("Login failed, token not provided");
+        }
     }
 
-    @Test(priority = 2)
-    public void loginUserWithInvalidEmail() {
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "email", "santhosh680657.com",
-                        "password", "Password@123"
-                ))
-                .when()
-                .post("/login")
-                .then()
-                .statusCode(400)
-                .body("success", equalTo(false))
-                .body("message", equalTo("A valid email address is required"));
+    @Test(priority = 1, dataProvider = "loginData", dataProviderClass = JsonUtils.class)
+    public void loginUserSuccess(Map<String, String> data) {
+        if ("Success".equalsIgnoreCase(data.get("Testcases"))) {
+            validateLogin(data);
+        }
     }
 
-    @Test(priority = 3)
-    public void loginUserWithInvalidPassword() {
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "email", "santhosh680657@gmail.com",
-                        "password", "Pass"
-                ))
-                .when()
-                .post("/login")
-                .then()
-                .statusCode(400)
-                .body("success", equalTo(false))
-                .body("message", equalTo("Password must be between 6 and 30 characters"));
+    @Test(priority = 2, dataProvider = "loginData", dataProviderClass = JsonUtils.class)
+    public void loginUserWithInvalidEmail(Map<String, String> data) {
+        if ("Invalid Email".equalsIgnoreCase(data.get("Testcases"))) {
+            validateLogin(data);
+        }
     }
 
-    @Test(priority = 4)
-    public void loginUserWithInvalidCredentials() {
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "email", "santhosh680657@gmail.com",
-                        "password", "Password2345678"
-                ))
-                .when()
-                .post("/login")
-                .then()
-                .statusCode(401)
-                .body("success", equalTo(false))
-                .body("message", equalTo("Incorrect email address or password"));
+    @Test(priority = 3, dataProvider = "loginData", dataProviderClass = JsonUtils.class)
+    public void loginUserWithInvalidPassword(Map<String, String> data) {
+        if ("Invalid Password".equalsIgnoreCase(data.get("Testcases"))) {
+            validateLogin(data);
+        }
     }
+
+
+    @Test(priority = 4, dataProvider = "loginData", dataProviderClass = JsonUtils.class)
+    public void loginUserWithInvalidCredentials(Map<String, String> data) {
+        if ("Incorrect Password".equalsIgnoreCase(data.get("Testcases"))) {
+            validateLogin(data);
+        }
+    }
+
 }
