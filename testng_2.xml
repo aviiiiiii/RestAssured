@@ -9,6 +9,7 @@
         <methods>
           <include name="registerUser"/>
           <include name="loginUser"/>
+          <include name="changePassword"/>
         </methods>
       </class>
     </classes>
