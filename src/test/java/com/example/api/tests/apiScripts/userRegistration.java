@@ -3,6 +3,8 @@ package com.example.api.tests.apiScripts;
 import com.example.api.utils.JsonUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -13,6 +15,8 @@ import static org.hamcrest.Matchers.equalTo;
 
 
 public class userRegistration {
+
+    private static final Logger logger = LoggerFactory.getLogger(userRegistration.class);
 
     @BeforeClass
     public void setup() {

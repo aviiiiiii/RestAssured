@@ -3,6 +3,8 @@ package com.example.api.tests.apiScripts;
 import com.example.api.utils.JsonUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -13,6 +15,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class loginUser {
+
+    private static final Logger logger = LoggerFactory.getLogger(loginUser.class);
 
     @BeforeClass
     public void setup() {
@@ -36,9 +40,9 @@ public class loginUser {
 
         if (Boolean.parseBoolean(data.get("success"))) {
             response.body("data.token", notNullValue());
-            System.out.println("Token validation successful");
+            logger.info("Token validation successful");
         } else {
-            System.out.println("Login failed, token not provided");
+            logger.info("Login failed, token not provided");
         }
     }
 
