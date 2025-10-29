@@ -6,13 +6,16 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.testng.TestNG;
+import org.testng.xml.XmlSuite;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 
 public class TestNGXMLGenerator2 {
 
@@ -24,6 +27,21 @@ public class TestNGXMLGenerator2 {
             FileInputStream fis = new FileInputStream(excelPath);
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
+
+            boolean parallelFlag = Boolean.parseBoolean(ConfigReader.getProperty("parallelFlag"));
+            String threadCount = ConfigReader.getProperty("threadCount");
+
+            Map<String, String> suiteParams = new LinkedHashMap<>();
+            Properties props = ConfigReader.getAllProperties(); // <-- You’ll add this helper in ConfigReader
+            for (String key : props.stringPropertyNames()) {
+                if (key.startsWith("suiteParam.")) {
+                    String paramName = key.substring("suiteParam.".length());
+                    String paramValue = props.getProperty(key, "").trim();
+                    if (!paramValue.isEmpty()) { // only add non-empty ones
+                        suiteParams.put(paramName, paramValue);
+                    }
+                }
+            }
 
             // TestNG XML header
             StringBuilder xmlBuilder = new StringBuilder();
@@ -58,7 +76,23 @@ public class TestNGXMLGenerator2 {
 
             // Build XML dynamically
             for (String suiteName : suiteMap.keySet()) {
-                xmlBuilder.append("<suite name=\"").append(suiteName).append("\">\n");
+                xmlBuilder.append("<suite name=\"").append(suiteName).append("\"");
+
+                //parallelFlag and threadCount
+                if (parallelFlag) {
+                    xmlBuilder.append(" parallel=\"methods\"");
+                    xmlBuilder.append(" thread-count=\"").append(threadCount).append("\"");
+                }
+                xmlBuilder.append(">\n");
+
+                // Add suite-level <parameter> tags
+                for (Map.Entry<String, String> entry : suiteParams.entrySet()) {
+                    xmlBuilder.append("  <parameter name=\"")
+                            .append(entry.getKey())
+                            .append("\" value=\"")
+                            .append(entry.getValue())
+                            .append("\"/>\n");
+                }
 
                 Map<String, List<TestCaseData>> tests = suiteMap.get(suiteName);
                 for (String testName : tests.keySet()) {
@@ -96,11 +130,12 @@ public class TestNGXMLGenerator2 {
                 writer.write(xmlBuilder.toString());
             }
 
-            System.out.println("✅ TestNG XML generated successfully: " + xmlFilePath);
+            System.out.println("TestNG XML generated successfully: " + xmlFilePath);
+            runGeneratedXML(xmlFilePath);
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("❌ Failed to generate TestNG XML: " + e.getMessage());
+            throw new RuntimeException("Failed to generate TestNG XML: " + e.getMessage());
         }
     }
 
@@ -118,6 +153,22 @@ public class TestNGXMLGenerator2 {
             return "";
         }
     }
+
+    private static void runGeneratedXML(String xmlFilePath) {
+        try {
+            TestNG testng = new TestNG();
+            List<String> suites = new ArrayList<>();
+            suites.add(xmlFilePath);
+            testng.setTestSuites(suites);
+            System.out.println("Running TestNG suite from: " + xmlFilePath);
+            testng.run();
+            System.out.println("TestNG execution completed!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to run generated TestNG XML: " + e.getMessage());
+        }
+    }
+
 
     // Helper class for test case data
     private static class TestCaseData {
