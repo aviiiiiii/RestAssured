@@ -1,17 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Regression,API">
-  <parameter name="env" value="qa"/>
-  <parameter name="version" value="v3"/>
-  <test name="API">
-    <classes>
-      <class name="com.example.api.tests.userAPI_json">
-        <methods>
-          <include name="registerUser"/>
-          <include name="loginUser"/>
-          <include name="changePassword"/>
-        </methods>
-      </class>
-    </classes>
-  </test>
-</suite>
