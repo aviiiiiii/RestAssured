@@ -40,3 +40,6 @@ target/surefire-reports/
 *.swp
 .DS_Store
 Thumbs.db
+
+
+~$*.xlsx

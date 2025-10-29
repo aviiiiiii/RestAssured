@@ -56,22 +56,23 @@ public class TestNGXMLGenerator2 {
                 Row row = sheet.getRow(i);
                 if (row == null) continue;
 
-                String suiteName = getCellValue(row, 0);
-                String testName = getCellValue(row, 1);
-                String className = getCellValue(row, 2);
-                String testCaseID = getCellValue(row, 3);
+                String testCaseID = getCellValue(row, 0);
+                String suiteName = getCellValue(row, 1);
+                String testName = getCellValue(row, 2);
+                String tags = getCellValue(row, 3);
                 String methodName = getCellValue(row, 4);
-                String paramName = getCellValue(row, 5);
-                String paramValue = getCellValue(row, 6);
-                String execute = getCellValue(row, 7);
-                String dependsOn = getCellValue(row, 8);
+                String className = getCellValue(row, 5);
+                String execute = getCellValue(row, 6);
+                String paramName = getCellValue(row, 7);
+                String paramValue = getCellValue(row, 8);
+                String dependsOn = getCellValue(row, 9);
 
                 if (!"Y".equalsIgnoreCase(execute)) continue;
 
                 suiteMap
                         .computeIfAbsent(suiteName, k -> new LinkedHashMap<>())
                         .computeIfAbsent(testName, k -> new ArrayList<>())
-                        .add(new TestCaseData(className, methodName, testCaseID, paramName, paramValue, dependsOn));
+                        .add(new TestCaseData(className, methodName, testCaseID, paramName, paramValue, dependsOn, tags));
             }
 
             // Build XML dynamically
@@ -125,13 +126,13 @@ public class TestNGXMLGenerator2 {
             workbook.close();
 
             // Write to file
-            String xmlFilePath = "testng_2.xml";
+            String xmlFilePath = ConfigReader.getProperty("generatedXMLName");
             try (FileWriter writer = new FileWriter(xmlFilePath)) {
                 writer.write(xmlBuilder.toString());
             }
 
             System.out.println("TestNG XML generated successfully: " + xmlFilePath);
-            runGeneratedXML(xmlFilePath);
+//            runGeneratedXML(xmlFilePath);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,15 +179,17 @@ public class TestNGXMLGenerator2 {
         String paramName;
         String paramValue;
         String dependsOn;
+        String tags;
 
         public TestCaseData(String className, String methodName, String testCaseID,
-                            String paramName, String paramValue, String dependsOn) {
+                            String paramName, String paramValue, String dependsOn, String tags) {
             this.className = className;
             this.methodName = methodName;
             this.testCaseID = testCaseID;
             this.paramName = paramName;
             this.paramValue = paramValue;
             this.dependsOn = dependsOn;
+            this.tags = tags;
         }
     }
 }

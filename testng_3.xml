@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Users_API">
+  <parameter name="env" value="qa"/>
+  <parameter name="version" value="v3"/>
+  <test name="Register User">
+    <classes>
+      <class name="com.example.api.tests.apiScripts.userRegistration">
+        <methods>
+          <include name="registerUserSuccess"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="Login User">
+    <classes>
+      <class name="com.example.api.tests.apiScripts.loginUser">
+        <methods>
+          <include name="loginUserSuccess"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="Change Password">
+    <classes>
+      <class name="com.example.api.tests.apiScripts.changePassword">
+        <methods>
+          <include name="changePasswordSuccess"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>
