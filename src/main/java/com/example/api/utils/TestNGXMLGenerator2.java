@@ -33,6 +33,7 @@ public class TestNGXMLGenerator2 {
 
             String configuredTag = ConfigReader.getProperty("tag");
 
+
             Map<String, String> suiteParams = new LinkedHashMap<>();
             Properties props = ConfigReader.getAllProperties(); // <-- You’ll add this helper in ConfigReader
             for (String key : props.stringPropertyNames()) {
@@ -73,10 +74,18 @@ public class TestNGXMLGenerator2 {
 
                 if (configuredTag != null && !configuredTag.isEmpty()) {
                     boolean matched = false;
+                    Set<String> configuredTags = new HashSet<>();
+                    for (String t : configuredTag.split(",")) {
+                        if (!t.trim().isEmpty()) {
+                            configuredTags.add(t.trim().toLowerCase());
+                        }
+                    }
+
                     if (tags != null && !tags.isEmpty()) {
                         String[] tag = tags.split(",");
                         for (String t : tag) {
-                            if (configuredTag.equalsIgnoreCase(t.trim())) {
+                            System.out.println(configuredTags.contains(t.trim().toLowerCase()));
+                            if (configuredTags.contains(t.trim().toLowerCase())) {
                                 matched = true;
                                 break;
                             }
