@@ -22,7 +22,7 @@ public class TestNGXMLGenerator2 {
     public static void main(String[] args) {
         try {
             String appName = ConfigReader.getProperty("appName");
-            String excelPath = ConfigReader.getProperty("testNGPath");
+            String excelPath = "src/test/resources/InputForAPIRuns/"+ConfigReader.getProperty("excelName");
 
             FileInputStream fis = new FileInputStream(excelPath);
             Workbook workbook = new XSSFWorkbook(fis);
@@ -30,6 +30,8 @@ public class TestNGXMLGenerator2 {
 
             boolean parallelFlag = Boolean.parseBoolean(ConfigReader.getProperty("parallelFlag"));
             String threadCount = ConfigReader.getProperty("threadCount");
+
+            String configuredTag = ConfigReader.getProperty("tag");
 
             Map<String, String> suiteParams = new LinkedHashMap<>();
             Properties props = ConfigReader.getAllProperties(); // <-- You’ll add this helper in ConfigReader
@@ -68,6 +70,20 @@ public class TestNGXMLGenerator2 {
                 String dependsOn = getCellValue(row, 9);
 
                 if (!"Y".equalsIgnoreCase(execute)) continue;
+
+                if (configuredTag != null && !configuredTag.isEmpty()) {
+                    boolean matched = false;
+                    if (tags != null && !tags.isEmpty()) {
+                        String[] tag = tags.split(",");
+                        for (String t : tag) {
+                            if (configuredTag.equalsIgnoreCase(t.trim())) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!matched)   continue;
+                }
 
                 suiteMap
                         .computeIfAbsent(suiteName, k -> new LinkedHashMap<>())
