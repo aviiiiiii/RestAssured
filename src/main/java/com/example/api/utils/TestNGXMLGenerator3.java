@@ -7,17 +7,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.TestNG;
-import org.testng.xml.XmlSuite;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.*;
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 
-public class TestNGXMLGenerator2 {
+public class TestNGXMLGenerator3 {
 
     public static void main(String[] args) {
         try {
@@ -26,12 +22,10 @@ public class TestNGXMLGenerator2 {
 
             FileInputStream fis = new FileInputStream(excelPath);
             Workbook workbook = new XSSFWorkbook(fis);
-            Sheet sheet = workbook.getSheet(ConfigReader.getProperty("sheetName"));
-
+            Sheet propSheet = workbook.getSheet("Properties");
 
             boolean parallelFlag = Boolean.parseBoolean(ConfigReader.getProperty("parallelFlag"));
             String threadCount = ConfigReader.getProperty("threadCount");
-
             String configuredTag = ConfigReader.getProperty("tag");
 
 
