@@ -10,7 +10,7 @@ public class ConfigReader {
     static {
         try {
           FileInputStream fileInput = new FileInputStream("src/test/resources/config.properties");
-            properties.load(fileInput); //this will read the file line by line as key and value
+            properties.load(fileInput);
         }catch(IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to load the config.properties file");

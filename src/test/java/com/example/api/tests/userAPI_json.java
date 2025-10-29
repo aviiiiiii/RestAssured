@@ -1,7 +1,5 @@
 package com.example.api.tests;
 
-
-import com.example.api.utils.ExcelUtilsUsersAPI;
 import com.example.api.utils.JsonUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
